@@ -1,0 +1,112 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100%;
+  overflow-x: hidden;
+}
+
+img,
+video,
+canvas {
+  max-width: 100%;
+}
+
+input,
+button,
+select,
+textarea {
+  max-width: 100%;
+}
+
+.responsive-page {
+  width: 100%;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.responsive-container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.responsive-card {
+  width: 100%;
+  max-width: 560px;
+}
+
+.responsive-grid {
+  display: grid;
+  gap: 24px;
+}
+
+@media (max-width: 1024px) {
+  .responsive-page {
+    padding: 18px;
+  }
+
+  .game-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .game-panel {
+    grid-column: span 1 / span 1 !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .responsive-page {
+    padding: 14px;
+  }
+
+  .mobile-stack {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  .mobile-full {
+    width: 100% !important;
+  }
+
+  .mobile-text-center {
+    text-align: center;
+  }
+
+  .mobile-title {
+    font-size: 28px !important;
+  }
+
+  .mobile-room-code {
+    font-size: 34px !important;
+    letter-spacing: 0.12em !important;
+  }
+
+  .mobile-hide {
+    display: none !important;
+  }
+}
+
+

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Socket Test</title>
+</head>
+
+<body>
+    <h1>Socket.IO Test</h1>
+
+    <button onclick="createRoom()">Create Room</button>
+    <input id="roomCode" placeholder="Room Code" />
+    <button onclick="joinRoom()">Join Room</button>
+    <button onclick="startGame()">Start Game</button>
+    <button onclick="chooseWord()">Choose First Word</button>
+    <input id="guessInput" placeholder="Enter Guess" />
+    <button onclick="sendGuess()">Guess</button>
+
+    <pre id="output"></pre>
+
+    <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+    <script>
+        let availableWords = [];
+        const socket = io("http://localhost:5000");
+        const output = document.getElementById("output");
+
+        socket.on("connect", () => {
+            output.innerText += "Connected: " + socket.id + "\n";
+        });
+
+        socket.on("player_joined", (data) => {
+            output.innerText += "Player Joined:\n" + JSON.stringify(data, null, 2) + "\n";
+        });
+        socket.on("player_left", (data) => {
+            output.innerText +=
+                "Player Left:\n" + JSON.stringify(data, null, 2) + "\n";
+        });
+        socket.on("game_started", (data) => {
+            output.innerText +=
+                "Game Started:\n" +
+                JSON.stringify(data, null, 2) +
+                "\n";
+        });
+        socket.on("round_start", (data) => {
+            output.innerText +=
+                "Round Start:\n" +
+                JSON.stringify(data, null, 2) +
+                "\n";
+        });
+
+        socket.on("word_options", (data) => {
+            availableWords = data.words;
+
+            output.innerText +=
+                "Word Options:\n" +
+                JSON.stringify(data, null, 2) +
+                "\n";
+        });
+
+        socket.on("word_selected", (data) => {
+            output.innerText +=
+                "Word Selected:\n" +
+                JSON.stringify(data, null, 2) +
+                "\n";
+        });
+        socket.on("guess_result", (data) => {
+            output.innerText +=
+                "Guess Result:\n" +
+                JSON.stringify(data, null, 2) +
+                "\n";
+        });
+
+        socket.on("timer_update", (data) => {
+            output.innerText +=
+                "Timer:\n" +
+                JSON.stringify(data, null, 2) +
+                "\n";
+        });
+
+        socket.on("round_end", (data) => {
+            output.innerText +=
+                "Round End:\n" +
+                JSON.stringify(data, null, 2) +
+                "\n";
+        });
+        socket.on("game_over", (data) => {
+            output.innerText +=
+                "Game Over:\n" +
+                JSON.stringify(data, null, 2) +
+                "\n";
+        });
+
+        function createRoom() {
+            socket.emit("create_room", { playerName: "Prince" }, (res) => {
+                output.innerText += "Create Room Response:\n" + JSON.stringify(res, null, 2) + "\n";
+                if (res.roomCode) {
+                    document.getElementById("roomCode").value = res.roomCode;
+                }
+            });
+        }
+
+        function joinRoom() {
+            const roomCode = document.getElementById("roomCode").value;
+
+            socket.emit("join_room", { roomCode, playerName: "Aman" }, (res) => {
+                output.innerText += "Join Room Response:\n" + JSON.stringify(res, null, 2) + "\n";
+            });
+        }
+        function startGame() {
+            const roomCode = document.getElementById("roomCode").value;
+
+            socket.emit("start_game", { roomCode }, (res) => {
+                output.innerText +=
+                    "Start Game Response:\n" +
+                    JSON.stringify(res, null, 2) +
+                    "\n";
+            });
+        }
+
+        function chooseWord() {
+            const roomCode = document.getElementById("roomCode").value;
+
+            if (availableWords.length === 0) {
+                output.innerText += "No words available\n";
+                return;
+            }
+
+            socket.emit(
+                "word_chosen",
+                { roomCode, word: availableWords[0] },
+                (res) => {
+                    output.innerText +=
+                        "Choose Word Response:\n" +
+                        JSON.stringify(res, null, 2) +
+                        "\n";
+                }
+            );
+        }
+        function sendGuess() {
+            const roomCode = document.getElementById("roomCode").value;
+            const guess = document.getElementById("guessInput").value;
+
+            socket.emit(
+                "guess",
+                {
+                    roomCode,
+                    guess,
+                },
+                (res) => {
+                    output.innerText +=
+                        "Guess Response:\n" +
+                        JSON.stringify(res, null, 2) +
+                        "\n";
+                }
+            );
+        }
+    </script>
+</body>
+
+</html>
