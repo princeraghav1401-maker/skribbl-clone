@@ -22,7 +22,7 @@ const defaultHotkeys: Hotkeys = {
 };
 
 const GameSettings = ({ isOpen, onClose }: Props) => {
-    const [volume, setVolume] = useState(() => {
+    const [volume] = useState(() => {
         return Number(localStorage.getItem("volume") || 100);
     });
 
